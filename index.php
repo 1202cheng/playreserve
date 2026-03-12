@@ -2,6 +2,10 @@
 session_start();
 include "config.php";
 
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
 $sql = "SELECT * FROM courts WHERE availability = 1";
 $result = mysqli_query($conn, $sql);
 ?>
@@ -39,6 +43,10 @@ $result = mysqli_query($conn, $sql);
                     Logout
 
                 </a>
+                    <a href="admin/admin_login.php"
+                        class="bg-black px-3 py-1 rounded text-white ml-3">
+                        Admin
+</a>
 
             <?php } else { ?>
 

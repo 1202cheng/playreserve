@@ -6,6 +6,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
+
 $user_id = $_SESSION['user_id'];
 
 $user_sql = "SELECT * FROM users WHERE id='$user_id'";
@@ -25,104 +26,179 @@ $booking_result = mysqli_query($conn, $booking_sql);
 <html>
 
 <head>
-    <title>My Profile</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+<title>My Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gray-100">
 
-    <!-- Header -->
+<!-- Header -->
 
-    <div class="bg-blue-600 text-white p-4 flex justify-between">
+<div class="bg-blue-600 text-white p-4 flex justify-between items-center">
 
-        <a href="index.php">← Back</a>
+<h1 class="font-bold text-lg">PlayReserve</h1>
 
-        <a href="logout.php" class="bg-red-500 px-3 py-1 rounded">
-            Logout
-        </a>
+<div class="flex gap-4">
+<a href="index.php" class="bg-black px-3 py-1 rounded text-white">Home</a>
+<a href="logout.php" class="bg-red-500 px-3 py-1 rounded">Logout</a>
+</div>
 
-    </div>
-
-
-    <div class="max-w-3xl mx-auto mt-6 p-4">
-
-        <!-- Profile Card -->
-
-        <div class="bg-white p-4 rounded shadow mb-6">
-
-            <h2 class="text-xl font-bold mb-3">
-                My Profile
-            </h2>
-
-            <p><b>Username:</b> <?php echo $user['username']; ?></p>
-            <p><b>Email:</b> <?php echo $user['email']; ?></p>
-            <p><b>Phone:</b> <?php echo $user['phone']; ?></p>
-            <p><b>Gender:</b> <?php echo $user['gender']; ?></p>
-
-        </div>
+</div>
 
 
-        <!-- Booking History -->
+<div class="max-w-5xl mx-auto mt-8">
 
-        <div class="bg-white p-4 rounded shadow">
+<!-- Profile Card -->
 
-            <h2 class="text-xl font-bold mb-3">
-                My Bookings
-            </h2>
+<div class="bg-white rounded-lg shadow p-6 mb-6">
 
-            <?php
-            if (mysqli_num_rows($booking_result) == 0) {
-                echo "<p>No bookings yet.</p>";
-            }
-            ?>
+<h2 class="text-xl font-bold mb-4">
+My Profile
+</h2>
 
-            <table class="w-full text-left">
+<div class="grid grid-cols-2 gap-4">
 
-                <tr class="border-b">
-                    <th class="py-2">Court</th>
-                    <th>Date</th>
-                    <th>Start</th>
-                    <th>End</th>
-                    <th>Status</th>
-                </tr>
+<div>
+<p class="text-gray-500">Username</p>
+<p class="font-semibold"><?php echo $user['username']; ?></p>
+</div>
 
-                <?php
-                while ($row = mysqli_fetch_assoc($booking_result)) {
-                ?>
+<div>
+<p class="text-gray-500">Email</p>
+<p class="font-semibold"><?php echo $user['email']; ?></p>
+</div>
 
-                    <tr class="border-b">
+<div>
+<p class="text-gray-500">Phone</p>
+<p class="font-semibold"><?php echo $user['phone']; ?></p>
+</div>
 
-                        <td class="py-2">
-                            <?php echo $row['court_name']; ?>
-                        </td>
+<div>
+<p class="text-gray-500">Gender</p>
+<p class="font-semibold"><?php echo $user['gender']; ?></p>
+</div>
 
-                        <td>
-                            <?php echo $row['booking_date']; ?>
-                        </td>
+</div>
 
-                        <td>
-                            <?php echo $row['start_time']; ?>
-                        </td>
+</div>
 
-                        <td>
-                            <?php echo $row['end_time']; ?>
-                        </td>
 
-                        <td>
-                            <?php echo $row['status']; ?>
-                        </td>
+<!-- Booking Section -->
 
-                    </tr>
+<div class="bg-white rounded-lg shadow p-6">
 
-                <?php
-                }
-                ?>
+<h2 class="text-xl font-bold mb-4">
+My Bookings
+</h2>
 
-            </table>
+<?php
+if (mysqli_num_rows($booking_result) == 0) {
+echo "<p class='text-gray-500'>No bookings yet.</p>";
+}
+?>
 
-        </div>
+<div class="overflow-x-auto">
 
-    </div>
+<table class="w-full">
+
+<thead>
+
+<tr class="border-b text-left text-gray-600">
+
+<th class="py-3">Court</th>
+<th>Date</th>
+<th>Start</th>
+<th>End</th>
+<th>Price</th>
+<th>Status</th>
+<th>Receipt</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<?php
+while ($row = mysqli_fetch_assoc($booking_result)) {
+
+/* Status Color */
+
+$statusColor = "bg-yellow-100 text-yellow-700";
+
+if($row['payment_status'] == "Complete"){
+$statusColor = "bg-green-100 text-green-700";
+}
+
+?>
+
+<tr class="border-b hover:bg-gray-50">
+
+<td class="py-3 font-medium">
+<?php echo $row['court_name']; ?>
+</td>
+
+<td>
+<?php echo $row['booking_date']; ?>
+</td>
+
+<td>
+<?php echo substr($row['start_time'],0,5); ?>
+</td>
+
+<td>
+<?php echo substr($row['end_time'],0,5); ?>
+</td>
+
+<td class="text-green-600 font-semibold">
+RM <?php echo $row['total_price']; ?>
+</td>
+
+<td>
+
+<!-- <span class="px-3 py-1 rounded-full text-sm <?php echo $statusColor; ?>"> -->
+
+<?php echo $row['status']; ?>
+
+<!-- </span> -->
+
+</td>
+
+<td>
+
+<?php if($row['receipt']){ ?>
+
+<a href="receipts/<?php echo $row['receipt']; ?>"
+target="_blank"
+class="bg-blue-500 text-white px-3 py-1 rounded text-sm">
+
+View
+
+</a>
+
+<?php } else { ?>
+
+<span class="text-gray-400 text-sm">
+No receipt
+</span>
+
+<?php } ?>
+
+</td>
+
+</tr>
+
+<?php } ?>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
 
 </body>
 

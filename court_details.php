@@ -1,6 +1,11 @@
 <?php
+session_start();
 include "config.php";
 
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
 $court_id = $_GET['id'];
 
 $sql = "SELECT * FROM courts WHERE court_id = $court_id";
