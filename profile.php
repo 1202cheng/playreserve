@@ -6,7 +6,6 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
-
 $user_id = $_SESSION['user_id'];
 
 $user_sql = "SELECT * FROM users WHERE id='$user_id'";
