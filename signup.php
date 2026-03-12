@@ -13,11 +13,8 @@
 <body class="bg-gray-200 flex items-center justify-center min-h-screen">
 
     <div class="bg-white w-[420px] p-10 rounded shadow relative">
-
         <a href="index.php" class="absolute left-4 top-4 text-xl">←</a>
-
         <h2 class="text-center text-xl font-semibold mb-8">SIGN UP</h2>
-
         <form action="register_process.php" method="POST" class="space-y-4">
 
             <div>
@@ -37,14 +34,32 @@
                     id="password"
                     name="password"
                     pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}"
-                    title="Must contain 1 uppercase, 1 lowercase, 1 number, 1 symbol"
-                    class="w-full bg-blue-100 rounded p-2.5 mt-1 outline-none"
+                    title="Must contain 1 uppercase, 1 lowercase, 1 number, 1 symbol, and at least 8 characters"
+                    class="w-full bg-blue-100 rounded p-2.5 outline-none"
                     required>
 
                 <button type="button" onclick="togglePassword('password')"
                     class="absolute right-3 top-9 text-gray-600">
-                    👁
+
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+
+                        <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+
+                        <path d="M1 12C1 12 5 20 12 20C19 20 23 12 23 12"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+
+                        <circle cx="12" cy="12" r="3"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+
+                    </svg>
+
                 </button>
+
             </div>
 
             <div class="relative">
@@ -54,13 +69,31 @@
                     type="password"
                     id="confirm_password"
                     name="confirm_password"
-                    class="w-full bg-blue-100 rounded p-2.5 mt-1 outline-none"
+                    class="w-full bg-blue-100 rounded p-2.5 outline-none"
                     required>
 
                 <button type="button" onclick="togglePassword('confirm_password')"
                     class="absolute right-3 top-9 text-gray-600">
-                    👁
+
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+
+                        <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+
+                        <path d="M1 12C1 12 5 20 12 20C19 20 23 12 23 12"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+
+                        <circle cx="12" cy="12" r="3"
+                            stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+
+                    </svg>
+
                 </button>
+
             </div>
 
             <div>
@@ -74,6 +107,7 @@
                     required>
 
             </div>
+
             <div>
                 <label class="text-sm text-gray-600">Date of Birth</label>
                 <input
@@ -112,11 +146,11 @@
                 </select>
             </div>
 
-            <button class="w-full bg-blue-700 text-white py-2 rounded-full mt-4">
+            <button class="w-full bg-blue-700 text-white py-2 rounded-full mt-6 ">
                 SIGN UP
             </button>
 
-            <p class="text-xs text-center text-gray-500 mt-2">
+            <p class="text-xs text-center text-gray-500">
                 By signing up, I agree to the PlayReserve Terms of Use and Privacy Policy.
             </p>
 

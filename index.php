@@ -1,130 +1,182 @@
 <?php
-session_start();
+include "config.php";
+
+$sql = "SELECT * FROM courts WHERE availability = 1";
+$result = mysqli_query($conn, $sql);
 ?>
 
 <!DOCTYPE html>
 <html>
 
 <head>
-
     <title>PlayReserve</title>
-
     <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
 
-<body class="bg-[#0f4c81] min-h-screen flex flex-col">
+<body class="bg-gray-100">
 
-    <!-- Navbar -->
-    <div class="flex justify-between items-center px-8 py-4 text-white">
+    <!-- Header -->
 
-        <div class="text-xl font-semibold">
-            PlayReserve
+    <div class="bg-blue-600 p-4 flex justify-between text-white">
+
+        <h1 class="font-bold text-lg">PlayReserve</h1>
+
+        <div>
+            <a href="signup.php" class="mr-4">Sign Up</a>
+            <a href="login.php" class="bg-green-500 px-3 py-1 rounded">Log In</a>
         </div>
 
-        <div class="flex items-center space-x-6">
-
-            <a href="#" class="hover:underline">Booking</a>
-
-            <a href="signup.php" class="hover:underline">Sign Up</a>
-
-            <?php if (isset($_SESSION['username'])): ?>
+    </div>
 
 
-                <a href="logout.php" class="hover:underline">Log Out</a>
-                <div class="bg-green-400 text-black px-4 py-1 rounded-full">
-                    <?php echo $_SESSION['username']; ?>
-                </div>
-            <?php else: ?>
+    <!-- Banner -->
 
-                <a href="login.php" class="bg-green-400 text-black px-4 py-1 rounded-full">
-                    Log In
+    <div class="h-40 bg-cover bg-center"
+        style="background-image:url('images/banner.jpg')">
+    </div>
+
+
+    <div class="p-6">
+
+        <!-- Search -->
+
+        <div class="flex mb-4">
+
+            <input
+                type="text"
+                id="search"
+                placeholder="Search court..."
+                class="w-full p-3 rounded-l border outline-none">
+
+            <button
+                onclick="searchCourt()"
+                class="bg-gray-200 px-4 rounded-r">
+
+                🔍
+
+            </button>
+
+        </div>
+
+
+        <!-- Filter -->
+
+        <div class="flex gap-3 mb-6">
+
+            <button onclick="filterSport('pickleball')"
+                class="bg-green-400 text-white px-4 py-2 rounded">
+                Pickleball
+            </button>
+
+            <button onclick="filterSport('badminton')"
+                class="bg-blue-500 text-white px-4 py-2 rounded">
+                Badminton
+            </button>
+
+            <button onclick="filterSport('all')"
+                class="bg-gray-400 text-white px-4 py-2 rounded">
+                All
+            </button>
+
+        </div>
+
+
+        <!-- Courts -->
+
+        <div id="courts" class="grid grid-cols-2 gap-4">
+
+            <?php
+            while ($court = mysqli_fetch_assoc($result)) {
+
+                $sport = strtolower($court['sport_type']);
+            ?>
+
+                <a href="court_details.php?id=<?php echo $court['court_id']; ?>">
+
+                    <div class="court <?php echo $sport; ?> bg-white rounded shadow hover:shadow-lg">
+
+                        <img
+                            src="images/<?php echo $sport; ?>.jpg"
+                            class="w-full h-32 object-cover rounded-t">
+
+                        <div class="p-2">
+
+                            <p class="font-semibold">
+                                <?php echo $court['court_name']; ?>
+                            </p>
+
+                            <p class="text-sm text-gray-500">
+                                <?php echo $court['location']; ?>
+                            </p>
+
+                            <p class="text-green-600 font-semibold">
+                                RM <?php echo $court['price_per_hour']; ?>/hour
+                            </p>
+
+                        </div>
+
+                    </div>
+
                 </a>
 
-            <?php endif; ?>
+            <?php } ?>
 
         </div>
 
     </div>
 
-    <!-- Search Bar -->
-    <div class="flex justify-center mt-6">
-
-        <input
-            type="text"
-            placeholder="Search"
-            class="w-[600px] p-3 rounded-full outline-none shadow">
-
-    </div>
-
-    <!-- Sport Tabs -->
-    <div class="flex space-x-3 mt-6 px-10">
-
-        <button class="bg-gray-300 px-4 py-2 rounded">
-            Pickleball
-        </button>
-
-        <button class="bg-blue-500 text-white px-4 py-2 rounded">
-            Badminton
-        </button>
-
-    </div>
-
-    <!-- Court Cards -->
-    <div class="grid grid-cols-3 gap-6 px-10 mt-6">
-
-        <!-- Card 1 -->
-        <div class="bg-white rounded shadow overflow-hidden">
-
-            <img src="images/court1.jpg" class="h-40 w-full object-cover">
-
-            <div class="p-3">
-
-                <p class="font-semibold">AA Pickle Club</p>
-                <p class="text-sm text-gray-500">Johor Jaya, Johor</p>
-
-            </div>
-
-        </div>
-
-        <!-- Card 2 -->
-        <div class="bg-white rounded shadow overflow-hidden">
-
-            <img src="images/court2.jpg" class="h-40 w-full object-cover">
-
-            <div class="p-3">
-
-                <p class="font-semibold">BB Pickle Club</p>
-                <p class="text-sm text-gray-500">Bukit Jalil, Kuala Lumpur</p>
-
-            </div>
-
-        </div>
-
-        <!-- Card 3 -->
-        <div class="bg-white rounded shadow overflow-hidden">
-
-            <img src="images/court3.jpg" class="h-40 w-full object-cover">
-
-            <div class="p-3">
-
-                <p class="font-semibold">Apex Pickle Square</p>
-                <p class="text-sm text-gray-500">Ampang, Selangor</p>
-
-            </div>
-
-        </div>
-
-    </div>
 
     <!-- Footer -->
-    <div class="bg-[#0a3b63] text-white mt-auto py-4 flex justify-center space-x-10">
 
-        <p>📞 +6017-8939188</p>
+    <div class="bg-blue-600 text-white text-center p-4 mt-10">
 
-        <p>✉ playerserve918@gmail.com</p>
+        📞 +6017-893 9188
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        ✉ playreserve9188@gmail.com
 
     </div>
+
+
+    <script>
+        function searchCourt() {
+
+            let input = document.getElementById("search").value.toLowerCase();
+
+            let courts = document.querySelectorAll(".court");
+
+            courts.forEach(court => {
+
+                let name = court.innerText.toLowerCase();
+
+                if (name.includes(input)) {
+                    court.style.display = "block";
+                } else {
+                    court.style.display = "none";
+                }
+
+            });
+
+        }
+
+
+        function filterSport(type) {
+
+            let courts = document.querySelectorAll(".court");
+
+            courts.forEach(court => {
+
+                if (type === "all") {
+                    court.style.display = "block";
+                } else if (court.classList.contains(type)) {
+                    court.style.display = "block";
+                } else {
+                    court.style.display = "none";
+                }
+
+            });
+
+        }
+    </script>
 
 </body>
 
