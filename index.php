@@ -1,4 +1,5 @@
 <?php
+session_start();
 include "config.php";
 
 $sql = "SELECT * FROM courts WHERE availability = 1";
@@ -22,8 +23,30 @@ $result = mysqli_query($conn, $sql);
         <h1 class="font-bold text-lg">PlayReserve</h1>
 
         <div>
-            <a href="signup.php" class="mr-4">Sign Up</a>
-            <a href="login.php" class="bg-green-500 px-3 py-1 rounded">Log In</a>
+
+            <?php if (isset($_SESSION['username'])) { ?>
+
+                <a href="profile.php"
+                    class="bg-white text-blue-600 px-3 py-1 rounded font-semibold">
+
+                    <?php echo $_SESSION['username']; ?>
+
+                </a>
+
+                <a href="logout.php"
+                    class="ml-3 bg-red-500 px-3 py-1 rounded">
+
+                    Logout
+
+                </a>
+
+            <?php } else { ?>
+
+                <a href="signup.php" class="mr-4">Sign Up</a>
+                <a href="login.php" class="bg-green-500 px-3 py-1 rounded">Log In</a>
+
+            <?php } ?>
+
         </div>
 
     </div>

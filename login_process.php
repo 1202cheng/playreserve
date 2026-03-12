@@ -7,24 +7,26 @@ $email = $_POST['email'];
 $password = $_POST['password'];
 
 $sql = "SELECT * FROM users WHERE email='$email'";
-$result = mysqli_query(mysql: $conn, query: $sql);
+$result = mysqli_query($conn, $sql);
 
-if (mysqli_num_rows(result: $result) == 1) {
+if (mysqli_num_rows($result) == 1) {
 
-    $user = mysqli_fetch_assoc(result: $result);
+    $user = mysqli_fetch_assoc($result);
 
-    if (password_verify(password: $password, hash: $user['password'])) {
+    if (password_verify($password, $user['password'])) {
 
+        $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
-        header(header: "Location: index.php");
+
+        header("Location: index.php");
         exit();
     } else {
 
-        header(header: "Location: login.php?error=wrongpassword");
+        header("Location: login.php?error=wrongpassword");
         exit();
     }
 } else {
 
-    header(header: "Location: login.php?error=usernotfound");
+    header("Location: login.php?error=usernotfound");
     exit();
 }
