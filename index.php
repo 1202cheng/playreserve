@@ -2,10 +2,6 @@
 session_start();
 include "config.php";
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
 $sql = "SELECT * FROM courts WHERE availability = 1";
 $result = mysqli_query($conn, $sql);
 ?>
@@ -22,42 +18,47 @@ $result = mysqli_query($conn, $sql);
 
     <!-- Header -->
 
-    <div class="bg-blue-600 p-4 flex justify-between text-white">
+   <div class="bg-blue-600 p-4 flex justify-between text-white">
 
-        <h1 class="font-bold text-lg">PlayReserve</h1>
+    <h1 class="font-bold text-lg">PlayReserve</h1>
 
-        <div>
+    <div>
 
-            <?php if (isset($_SESSION['username'])) { ?>
+        <?php if(isset($_SESSION['user_id'])) { ?>
 
-                <a href="profile.php"
-                    class="bg-white text-blue-600 px-3 py-1 rounded font-semibold">
+            <!-- Logged in -->
 
-                    <?php echo $_SESSION['username']; ?>
+            <a href="profile.php"
+               class="bg-white text-blue-600 px-3 py-1 rounded font-semibold">
+                <?php echo $_SESSION['username']; ?>
+            </a>
 
-                </a>
+            <a href="logout.php"
+               class="ml-3 bg-red-500 px-3 py-1 rounded">
+                Logout
+            </a>
 
-                <a href="logout.php"
-                    class="ml-3 bg-red-500 px-3 py-1 rounded">
+        <?php } else { ?>
 
-                    Logout
+            <!-- Not logged in -->
 
-                </a>
-                    <a href="admin/admin_login.php"
-                        class="bg-black px-3 py-1 rounded text-white ml-3">
-                        Admin
-</a>
+            <a href="signup.php"  class="bg-red-500 px-3 py-1 rounded mr-3">Sign Up</a>
 
-            <?php } else { ?>
+            <a href="login.php"
+               class="bg-green-500 px-3 py-1 rounded mr-3">
+                Login
+            </a>
 
-                <a href="signup.php" class="mr-4">Sign Up</a>
-                <a href="login.php" class="bg-green-500 px-3 py-1 rounded">Log In</a>
+            <a href="admin/admin_login.php"
+               class="bg-black px-3 py-1 rounded text-white">
+                Admin Login
+            </a>
 
-            <?php } ?>
-
-        </div>
+        <?php } ?>
 
     </div>
+
+</div>
 
 
     <!-- Banner -->
