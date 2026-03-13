@@ -1,103 +1,148 @@
 <?php
-session_start();
+
+$message = "";
+$messageType = "";
+
+/* SUCCESS MESSAGE */
+
+if(isset($_GET['success'])){
+
+    if($_GET['success'] == "register"){
+        $message = "Registration successful! Please log in.";
+        $messageType = "success";
+    }
+
+    if($_GET['success'] == "passwordupdated"){
+        $message = "Password updated successfully. Please login.";
+        $messageType = "success";
+    }
+
+}
+
+/* ERROR MESSAGE */
+
+if(isset($_GET['error'])){
+
+    if($_GET['error'] == "usernotfound"){
+        $message = "User is not found.";
+        $messageType = "error";
+    }
+
+    if($_GET['error'] == "wrongpassword"){
+        $message = "Incorrect password.";
+        $messageType = "error";
+    }
+
+}
+
 ?>
 
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>Login</title>
+<title>Login</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 
 </head>
 
 <body class="bg-gray-200 flex items-center justify-center min-h-screen">
 
-    <div class="bg-white w-[500px] p-10 rounded shadow relative">
+<div class="bg-white w-[500px] p-10 rounded shadow relative">
 
-        <a href="index.php" class="absolute left-4 top-4 text-xl">←</a>
+<!-- <a href="index.php" class="absolute left-4 top-4 text-xl">←</a> -->
 
-        <h2 class="text-center text-xl font-semibold mb-8">LOG IN</h2>
+<h2 class="text-center text-xl font-semibold mb-8">LOG IN</h2>
 
-        <?php
-        if (isset($_GET['error'])) {
-        ?>
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-center">
+<!-- ALERT MESSAGE -->
 
-                <?php
-                if ($_GET['error'] == "usernotfound") {
-                    echo "User is not found.";
-                }
+<?php if(!empty($message)){ ?>
 
-                if ($_GET['error'] == "wrongpassword") {
-                    echo "Incorrect password.";
-                }
-                ?>
+<div class="<?php echo $messageType == 'error'
+? 'bg-red-100 border border-red-400 text-red-700'
+: 'bg-green-100 border border-green-400 text-green-700'; ?> px-4 py-3 rounded mb-4 text-center">
 
-            </div>
-        <?php
-        }
-        ?>
+<?php echo $message; ?>
 
-        <?php
-        if (isset($_GET['success'])) {
-        ?>
+</div>
 
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 text-center">
+<?php } ?>
 
-                <?php
-                if ($_GET['success'] == "passwordupdated") {
-                    echo "Password updated successfully. Please login.";
-                }
-                ?>
+<form action="login_process.php" method="POST" class="space-y-6">
 
-            </div>
+<!-- Email -->
 
-        <?php
-        }
-        ?>
+<div>
+<label class="text-gray-700">Email</label>
 
-        <form action="login_process.php" method="POST" class="space-y-6">
+<input type="email"
+name="email"
+required
+class="w-full bg-blue-100 rounded p-3 mt-2 outline-none">
 
-            <!-- Email -->
-            <div>
-                <label class="text-gray-700">Email</label>
-                <input type="email" name="email"
-                    class="w-full bg-blue-100 rounded p-3 mt-2 outline-none">
-            </div>
+</div>
 
-            <!-- Password -->
-            <div>
-                <label class="text-gray-700">Password</label>
 
-                <input type="password" name="password"
-                    class="w-full bg-blue-100 rounded p-3 mt-2 outline-none">
+<!-- Password -->
 
-                <!-- Forgot Password -->
-                <div class="flex justify-end mt-1">
-                    <a href="forgot_password.php" class="text-sm text-blue-600 hover:underline">
-                        Forgot Password?
-                    </a>
-                </div>
+<div>
 
-            </div>
+<label class="text-gray-700">Password</label>
 
-            <!-- Login Button -->
-            <button class="w-full bg-blue-700 text-white py-3 rounded-full hover:bg-blue-800 transition">
+<input type="password"
+name="password"
+required
+class="w-full bg-blue-100 rounded p-3 mt-2 outline-none">
 
-                LOG IN
+<div class="flex justify-end mt-1">
 
-            </button>
+<a href="forgot_password.php" class="text-sm text-blue-600 hover:underline">
 
-            <p class="text-center text-sm">
-                Don't have an account?
-                <a href="signup.php" class="text-blue-600">Sign Up</a>
-            </p>
+Forgot Password?
 
-        </form>
+</a>
 
-    </div>
+</div>
+
+</div>
+
+
+<!-- LOGIN BUTTON -->
+
+<button class="w-full bg-blue-700 text-white py-3 rounded-full hover:bg-blue-800 transition">
+
+LOG IN
+
+</button>
+
+<p class="text-center text-sm">
+
+Don't have an account?
+
+<a href="signup.php" class="text-blue-600">Sign Up</a>
+
+</p>
+
+</form>
+
+</div>
+
+<script>
+
+/* AUTO HIDE ALERT */
+
+setTimeout(() => {
+
+const alert = document.querySelector('.bg-red-100,.bg-green-100');
+
+if(alert){
+alert.style.display = "none";
+}
+
+},3000);
+
+</script>
 
 </body>
 
