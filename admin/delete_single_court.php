@@ -25,15 +25,6 @@ if(!$court){
 $venue_id = $court['venue_id'];
 $court_no = $court['court_no'];
 
-/* =========================
-   DELETE TIMESLOTS FIRST
-========================= */
-
-mysqli_query($conn,"
-DELETE FROM court_timeslots
-WHERE venue_id='$venue_id'
-AND court_no='$court_no'
-");
 
 /* =========================
    DELETE COURT
