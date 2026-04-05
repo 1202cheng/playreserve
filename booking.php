@@ -102,7 +102,7 @@ for($i=8;$i<=23;$i++){
 <?php while($c = mysqli_fetch_assoc($courts)) { ?>
 
 <option value="<?= $c['court_no'] ?>"
->
+<?= ($c['status'] == 'error') ? 'disabled' : '' ?>>
 
 Court <?= $c['court_no'] ?> (<?= $c['status'] ?>)
 

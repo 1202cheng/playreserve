@@ -101,9 +101,7 @@ if (!$result) {
             background: #ffffff;
         }
 
-        .booked {
-            background: #8eb8d8;
-        }
+        
 
         .error {
             background: #e6e6e6;
@@ -164,10 +162,6 @@ if (!$result) {
             text-align: center;
             background: white;
             color: #222;
-        }
-
-        .court-box.booked {
-            background: #8eb8d8;
         }
 
         .court-box.error {
@@ -255,10 +249,7 @@ if (!$result) {
         <div class="legend-circle available"></div>
         <span>Available</span>
     </div>
-    <div class="legend-item">
-        <div class="legend-circle booked"></div>
-        <span>Booked</span>
-    </div>
+
     <div class="legend-item">
         <div class="legend-circle error"></div>
         <span>Error</span>

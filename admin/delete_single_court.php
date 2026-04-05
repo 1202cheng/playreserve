@@ -1,27 +1,52 @@
 <?php
 session_start();
-
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: manage_court.php?success=court_deleted");
-    exit();
-}
-
 include('../config.php');
 
 if (!isset($_GET['id'])) {
-    die("Court ID not found.");
+    die("Invalid request");
 }
 
 $id = intval($_GET['id']);
 
-$sql = "DELETE FROM venue_courts WHERE id = ?";
-$stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_bind_param($stmt, "i", $id);
+/* =========================
+   GET COURT INFO FIRST
+========================= */
 
-if (mysqli_stmt_execute($stmt)) {
-    header("Location: manage_court.php");
-    exit();
-} else {
-    die("Delete failed: " . mysqli_error($conn));
+$get = mysqli_query($conn,"
+SELECT * FROM venue_courts WHERE id='$id'
+");
+
+$court = mysqli_fetch_assoc($get);
+
+if(!$court){
+    die("Court not found");
 }
+
+$venue_id = $court['venue_id'];
+$court_no = $court['court_no'];
+
+/* =========================
+   DELETE TIMESLOTS FIRST
+========================= */
+
+mysqli_query($conn,"
+DELETE FROM court_timeslots
+WHERE venue_id='$venue_id'
+AND court_no='$court_no'
+");
+
+/* =========================
+   DELETE COURT
+========================= */
+
+mysqli_query($conn,"
+DELETE FROM venue_courts WHERE id='$id'
+");
+
+/* =========================
+   REDIRECT
+========================= */
+
+header("Location: manage_court.php");
+exit();
 ?>

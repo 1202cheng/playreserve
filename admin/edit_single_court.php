@@ -131,10 +131,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <label>Status</label>
     <select name="status" required>
-        <option value="available" <?php if($court['status'] == 'available') echo 'selected'; ?>>Available</option>
-        <option value="booked" <?php if($court['status'] == 'booked') echo 'selected'; ?>>Booked</option>
-        <option value="error" <?php if($court['status'] == 'error') echo 'selected'; ?>>Error</option>
-    </select>
+    <option value="available" <?= $court['status']=='available'?'selected':'' ?>>Available</option>
+    <option value="error" <?= $court['status']=='error'?'selected':'' ?>>Error (Maintenance)</option>
+</select>
 
     <div class="btn-group">
         <a href="manage_court.php" class="back-btn">Back</a>

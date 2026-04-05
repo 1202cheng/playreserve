@@ -10,58 +10,94 @@ if(!isset($_SESSION['user_id'])){
 
 $user_id = $_SESSION['user_id'];
 
-$court_id = $_POST['court_id'];
-$court_number = $_POST['court_number'];
+$venue_id = $_POST['venue_id'];
+$court_no = $_POST['court_no'];
 $booking_date = $_POST['booking_date'];
 $start_time = $_POST['start_time'];
 $duration = $_POST['duration'];
 $total_price = $_POST['total_price'];
 
+/* =========================
+   FORMAT TIME
+========================= */
 
-/* Calculate End Time */
+$start_time = date("H:i:s", strtotime($start_time));
 
 $start = new DateTime($start_time);
 $start->modify("+$duration hour");
-$end_time = $start->format("H:i");
+$end_time = $start->format("H:i:s");
 
 
-/* Check if time slot already booked */
+/* =========================
+   CHECK COURT STATUS
+========================= */
 
-$check_sql = "SELECT * FROM bookings
-WHERE court_id='$court_id'
-AND court_number='$court_number'
-AND booking_date='$booking_date'
-AND (
-(start_time < '$end_time' AND end_time > '$start_time')
-)";
+$status_check = mysqli_query($conn,"
+SELECT status FROM venue_courts
+WHERE venue_id='$venue_id'
+AND court_no='$court_no'
+");
 
-$check_result = mysqli_query($conn,$check_sql);
+if(!$status_check){
+    die("SQL Error: " . mysqli_error($conn));
+}
 
-if(mysqli_num_rows($check_result) > 0){
+$row = mysqli_fetch_assoc($status_check);
 
+if($row['status'] == 'error'){
     echo "<script>
-    alert('This court is already booked during this time.');
+    alert('This court is under maintenance!');
     window.history.back();
     </script>";
-
     exit();
 }
 
 
-/* Upload Receipt */
+/* =========================
+   CHECK TIME SLOT (ANTI DOUBLE BOOK)
+========================= */
+
+for($i = 0; $i < $duration; $i++){
+
+    $check_time = date("H:i:s", strtotime("+$i hour", strtotime($start_time)));
+
+    $check_sql = "SELECT * FROM bookings
+    WHERE venue_id='$venue_id'
+    AND court_no='$court_no'
+    AND booking_date='$booking_date'
+    AND start_time <= '$check_time'
+    AND end_time > '$check_time'
+    ";
+
+    $result = mysqli_query($conn, $check_sql);
+
+    if(!$result){
+        die("SQL Error: " . mysqli_error($conn));
+    }
+
+    if(mysqli_num_rows($result) > 0){
+        echo "<script>
+        alert('This time slot is already booked!');
+        window.history.back();
+        </script>";
+        exit();
+    }
+}
+
+
+/* =========================
+   UPLOAD RECEIPT
+========================= */
 
 $receipt_name = $_FILES['receipt']['name'];
 $tmp = $_FILES['receipt']['tmp_name'];
 
-/* File validation */
-
 $allowed = ['jpg','jpeg','png'];
-
 $ext = strtolower(pathinfo($receipt_name, PATHINFO_EXTENSION));
 
 if(!in_array($ext,$allowed)){
     echo "<script>
-    alert('Only JPG, JPEG or PNG files are allowed.');
+    alert('Only JPG, JPEG or PNG allowed');
     window.history.back();
     </script>";
     exit();
@@ -72,18 +108,25 @@ $new_receipt_name = time() . "_" . $receipt_name;
 move_uploaded_file($tmp, "receipts/" . $new_receipt_name);
 
 
-/* Insert Booking */
+/* =========================
+   INSERT BOOKING
+========================= */
 
-$sql = "INSERT INTO bookings
-(user_id,court_id,court_number,booking_date,start_time,end_time,total_price,receipt,status,payment_status)
-
+$insert = mysqli_query($conn,"
+INSERT INTO bookings
+(user_id, venue_id, court_no, booking_date, start_time, end_time, total_price, receipt, status)
 VALUES
-('$user_id','$court_id','$court_number','$booking_date','$start_time','$end_time','$total_price','$new_receipt_name','Pending','Uploaded')";
+('$user_id','$venue_id','$court_no','$booking_date','$start_time','$end_time','$total_price','$new_receipt_name','Pending')
+");
 
-mysqli_query($conn,$sql);
+if(!$insert){
+    die("Insert Error: " . mysqli_error($conn));
+}
 
 
-/* Redirect */
+/* =========================
+   SUCCESS
+========================= */
 
 header("Location: profile.php");
 exit();
