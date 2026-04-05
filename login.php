@@ -45,6 +45,9 @@ if(isset($_GET['error'])){
 
 <script src="https://cdn.tailwindcss.com"></script>
 
+<!-- Added Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 
 <body class="bg-gray-200 flex items-center justify-center min-h-screen">
@@ -86,14 +89,24 @@ class="w-full bg-blue-100 rounded p-3 mt-2 outline-none">
 
 <!-- Password -->
 
-<div>
+<div class="relative">
 
 <label class="text-gray-700">Password</label>
 
 <input type="password"
+id="password"
 name="password"
 required
-class="w-full bg-blue-100 rounded p-3 mt-2 outline-none">
+class="w-full bg-blue-100 rounded p-3 mt-2 pr-10 outline-none">
+
+<button
+type="button"
+onclick="togglePassword()"
+class="absolute right-3 top-[42px] text-gray-400 hover:text-gray-600">
+
+<i class="fa-solid fa-eye"></i>
+
+</button>
 
 <div class="flex justify-end mt-1">
 
@@ -129,6 +142,29 @@ Don't have an account?
 </div>
 
 <script>
+
+/* SHOW / HIDE PASSWORD */
+
+function togglePassword(){
+
+const field = document.getElementById("password");
+const icon = document.querySelector(".fa-eye, .fa-eye-slash");
+
+if(field.type === "password"){
+
+field.type = "text";
+icon.classList.remove("fa-eye");
+icon.classList.add("fa-eye-slash");
+
+}else{
+
+field.type = "password";
+icon.classList.remove("fa-eye-slash");
+icon.classList.add("fa-eye");
+
+}
+
+}
 
 /* AUTO HIDE ALERT */
 

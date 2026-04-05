@@ -13,9 +13,9 @@ $user_sql = "SELECT * FROM users WHERE id='$user_id'";
 $user_result = mysqli_query($conn, $user_sql);
 $user = mysqli_fetch_assoc($user_result);
 
-$booking_sql = "SELECT bookings.*, courts.court_name
+$booking_sql = "SELECT bookings.*, venues.venue_name
 FROM bookings
-JOIN courts ON bookings.court_id = courts.court_id
+JOIN venues ON bookings.venue_id = venues.venue_id
 WHERE bookings.user_id = '$user_id'
 ORDER BY booking_date DESC";
 
@@ -135,7 +135,7 @@ $statusColor = "bg-green-100 text-green-700";
 <tr class="border-b hover:bg-gray-50">
 
 <td class="py-3 font-medium">
-<?php echo $row['court_name']; ?>
+<?php echo $row['venue_name']; ?> - Court <?php echo $row['court_no']; ?>
 </td>
 
 <td>

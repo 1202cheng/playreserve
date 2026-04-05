@@ -1,3 +1,4 @@
+```php
 <?php
 include "config.php";
 
@@ -9,13 +10,16 @@ $dob_input = $_POST['dob'];
 $phone = $_POST['phone'];
 $gender = $_POST['gender'];
 
+
 /* DOB CHECK */
 if(empty($dob_input)){
     header("Location: signup.php?error=dob");
     exit();
 }
 
-$dob = $_POST['dob'];
+/* CONVERT DOB FORMAT */
+$dob = date("Y-m-d", strtotime($dob_input));
+
 
 /* PASSWORD MATCH */
 if($password != $confirm_password){
@@ -56,3 +60,4 @@ if(mysqli_query($conn,$sql)){
 
 exit();
 ?>
+```

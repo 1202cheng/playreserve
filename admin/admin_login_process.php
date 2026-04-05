@@ -6,6 +6,9 @@ include "../config.php";
 $email = $_POST['email'];
 $password = $_POST['password'];
 
+// Optional: prevent SQL injection
+$email = mysqli_real_escape_string($conn, $email);
+
 $sql = "SELECT * FROM admins WHERE email='$email'";
 $result = mysqli_query($conn, $sql);
 
@@ -19,11 +22,18 @@ if (mysqli_num_rows($result) == 1) {
 
         header("Location: admin_dashboard.php");
         exit();
+
     } else {
 
-        echo "Wrong password";
+        // ❌ Wrong password
+        header("Location: admin_login.php?error=wrongpassword");
+        exit();
     }
+
 } else {
 
-    echo "Admin not found";
+    // ❌ Email not found
+    header("Location: admin_login.php?error=notfound");
+    exit();
 }
+?>

@@ -8,26 +8,32 @@
 
 <body class="bg-gray-200 flex items-center justify-center min-h-screen">
 
-    <div class="bg-white w-[420px] p-8 rounded shadow">
+<div class="bg-white w-[420px] p-8 rounded shadow">
 
-        <h2 class="text-center text-xl mb-6">Reset Password</h2>
+<h2 class="text-center text-xl mb-6">Reset Password</h2>
 
-        <form action="check_email.php" method="POST" class="space-y-4">
+<?php if(isset($_GET['error']) && $_GET['error']=="emailnotfound"){ ?>
+<div class="bg-red-200 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-center">
+Email not found. Please enter a registered email.
+</div>
+<?php } ?>
 
-            <input
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                class="w-full bg-blue-100 p-3 rounded"
-                required>
+<form action="check_email.php" method="POST" class="space-y-4">
 
-            <button class="w-full bg-blue-700 text-white py-2 rounded">
-                Continue
-            </button>
+<input
+type="email"
+name="email"
+placeholder="Enter your email"
+class="w-full bg-blue-100 p-3 rounded"
+required>
 
-        </form>
+<button class="w-full bg-blue-700 text-white py-2 rounded">
+Continue
+</button>
 
-    </div>
+</form>
+
+</div>
 
 </body>
 

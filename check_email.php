@@ -9,7 +9,12 @@ $result = mysqli_query($conn, $sql);
 if (mysqli_num_rows($result) > 0) {
 
     header("Location: reset_password.php?email=$email");
+    exit();
+
 } else {
 
-    echo "Email not found";
+    header("Location: forgot_password.php?error=emailnotfound");
+    exit();
+
 }
+?>
